@@ -1,5 +1,6 @@
 package com.spring.Journal.Service;
 
+import com.spring.Journal.Config.AppCacheConfig;
 import com.spring.Journal.Entity.Quotes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,11 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class QuotesService {
 
-    private static final String API = "https://zenquotes.io/api/random";
+    @Autowired
+    private AppCacheConfig appCacheConfig;
+
+    private final String API = appCacheConfig.getMap().get("quotesAPI");
+
 
     private final RestTemplate restTemplate;
 
