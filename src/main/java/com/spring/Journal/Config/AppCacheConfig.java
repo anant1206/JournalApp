@@ -14,18 +14,41 @@ import java.util.List;
 public class AppCacheConfig {
 
     @Getter
-    private static HashMap<String, String> map= new HashMap<>();
+    private static HashMap<String, String> map;
 
     @Autowired
     AppCacheRepository appCacheRepository;
 
     @PostConstruct
     public void init() {
+        map= new HashMap<>();
         final List<AppCache> all = appCacheRepository.findAll();
         for(AppCache ac : all){
             map.put(ac.getKey(),ac.getValue());
         }
+//        Temp Check
+//        for(String i : map.keySet()){
+//            System.out.println("Key: " + i +" Value:"+map.get(i));
+//        }
 
+    }
+
+    public void addCacheConfig(AppCache appCache){
+        if(appCache!=null){
+            appCacheRepository.save(appCache);
+        }
+    }
+
+    public String addCacheUpdateSpecificConfig(AppCache appCache){
+        if(appCache!=null){
+            String key = appCache.getKey();
+            if(appCacheRepository.findByKey(key)){
+                appCacheRepository.save(appCache);
+                return "SUCCESS";
+            }
+            return "NOEXIST";
+        }
+        return "BAD";
     }
 
 }

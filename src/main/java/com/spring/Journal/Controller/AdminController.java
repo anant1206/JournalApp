@@ -1,5 +1,7 @@
 package com.spring.Journal.Controller;
 
+import com.spring.Journal.Config.AppCacheConfig;
+import com.spring.Journal.Entity.AppCache;
 import com.spring.Journal.Entity.User;
 import com.spring.Journal.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class AdminController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    AppCacheConfig appCacheConfig;
 
     @GetMapping("/all-users")
     public ResponseEntity<?> getAll(){
@@ -32,6 +37,21 @@ public class AdminController {
             userService.saveAdmin(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/refresh-app-cache")
+    public void refreshAppCache(){
+        appCacheConfig.init();
+    }
+
+    @PostMapping("/add-app-cache")
+    public ResponseEntity<?> addAppCacheConfigProperty(@RequestBody AppCache appCache){
+        try{
+            appCacheConfig.addCacheConfig(appCache);
+            return new ResponseEntity<>(appCache, HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
